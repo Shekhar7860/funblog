@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "173659784111",
+    "firebase_url": "https://funblog-7ad1a-e87c3.firebaseio.com",
+    "project_id": "funblog-7ad1a",
+    "storage_bucket": "funblog-7ad1a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173659784111:android:8da9c5ad85d1561e",
+        "android_client_info": {
+          "package_name": "com.funblog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173659784111-bvbdfl09p3mkgad3ci7u6lakr3ri385n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBE-hvwG5xsAfgZT6RQ3CX4DSwSMrDwNEc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173659784111-bvbdfl09p3mkgad3ci7u6lakr3ri385n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
