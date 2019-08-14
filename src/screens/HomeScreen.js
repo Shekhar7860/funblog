@@ -6,6 +6,7 @@ import Slideshow from 'react-native-slideshow';
 import React, { Component } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import firebase from 'react-native-firebase';
+ import UnityAds from 'react-native-unity-ads';
 import { InterstitialAdManager, NativeAdsManager,  BannerView, AdSettings  } from 'react-native-fbads';
 const Banner = firebase.admob.Banner;
 const AdRequest = firebase.admob.AdRequest;
@@ -22,6 +23,7 @@ export default class ChannelScreen extends Component {
     this.state = {
       position: 1,
       interval: null,
+      defaultPlacementState: '',
       names: [
         {
            id: 0,
@@ -78,221 +80,78 @@ export default class ChannelScreen extends Component {
  
   }
   componentDidMount() {
-    SplashScreen.hide();
-    advert.loadAd(request.build());
- 
-    advert.on('onAdLoaded', () => {
-      console.log('Advert ready to show.');
-    });
+    // UnityAds.init('YOUR_GAME_ID');
+    UnityAds.init('1113851');
+
+    this._updateDefaultPlacementState();
     
-    setTimeout(() => {
-      if (advert.isLoaded()) {
-        console.log('working')
-        advert.show();
-      } else {
-        console.log('error occured')
-      }
-    }, 1000);
-   
-  }
-  componentWillReceiveProps(newProps){
-    alert("working")
-}
-  _openDetail = (value) => {
-    AdSettings.addTestDevice(AdSettings.currentDeviceHash);
-    InterstitialAdManager.showAd("434555400602082_435239277200361")
-  .then(didClick => {
-    console.log('working')
-  })
-  .catch(error => {
-    console.log(error, 'rror')
-  });
-    this.props.navigation.navigate('RankingScreen', { data: value })
-  }
+    UnityAds.addEventListener('onReady', placementId => {
+        this._updateDefaultPlacementState();
 
-  componentWillMount() {
-    this.setState({
-      interval: setInterval(() => {
-        this.setState({
-          position: this.state.position === this.state.dataSource.length ? 0 : this.state.position + 1
-        });
-      }, 5000)
+        console.log(`Ad with placementId "${placementId}" is ready.`);
     });
-  }
-  componentWillUnmount() {
-    clearInterval(this.state.interval);
-  }
 
-  space(){
-    return(<View style={{height: 50, width: 2, backgroundColor: 'black'}}/>)
+    UnityAds.addEventListener('onStart', placementId => {
+        console.log(`Ad with placementId "${placementId}" started.`);
+    });
+
+    UnityAds.addEventListener('onFinish', (placementId, result) => {
+        console.log(JSON.stringify(placementId));
+        console.log(JSON.stringify(result));
+        console.log(`Ad with placementId ${placementId} finished with result "${result}".`);
+    });
+
+    UnityAds.addEventListener('onError', (error, message) => {
+        console.log(error);
+        console.log(message);
+    });
 }
-  render() {
 
-    const images = [
-      'https://firebasestorage.googleapis.com/v0/b/businessideatest.appspot.com/o/business4i.jpeg?alt=media&token=160034be-416f-4883-af35-b9a9c1839e63',
-      'https://firebasestorage.googleapis.com/v0/b/businessideatest.appspot.com/o/images6.jpeg?alt=media&token=b5a59a46-e658-44a4-af1b-8dcbb8ea4abc',
-      'https://firebasestorage.googleapis.com/v0/b/businessideatest.appspot.com/o/images10.jpeg?alt=media&token=675800bb-6695-490b-b24f-70d10e6a1bdd'
-    ];
+render() {
     return (
-      <View style={{flex:1}}>
-      <View style={styles.toolbar}>
-                  <TouchableOpacity
-                     style={styles.toolbarButton}
-          onPress={() => {
-            this.props.navigation.dispatch(DrawerActions.toggleDrawer())
-          }}
-        >
-          <Icon
-            name="bars"
-            size={20}
-            color="#FFFFFF"
-            style={styles.headerLeftIconStyle}
-          />
-        </TouchableOpacity>
-                    <Text style={styles.toolbarTitle}>FunBlog</Text>
-                    <TouchableOpacity
-                    style={styles.toolbarButton}
-         
-        >
-          <Icon
-            name="search"
-            size={20}
-            color="#FFFFFF"
-            style={styles.headerLeftIconStyle}
-          />
-        </TouchableOpacity>
-                </View>
-                <Banner
-       style={{alignSelf:'center',marginLeft:20}}
-    size={"LARGE_BANNER"}
-  unitId={"ca-app-pub-3372831736678620/3500104657"}
-  request={request.build()}
-  onAdLoaded={() => {
-    console.log('Advert loaded');
-  }} />
-                
-                <Slideshow
-          dataSource={this.state.dataSource}
-          position={this.state.position}
-          onPositionChanged={position => this.setState({ position })}
-           />
-{/* <BannerView
-            placementId={"665254733991193_665876810595652"}
-            type="large"
-            onPress={() => console.log('click')}
-            onError={err => console.log('myyyyerror', err)}
-          /> */}
-     <FlatList
-          data={this.state.names}
-          style={{flexDirection: 'column', marginLeft:10}}
-          numColumns={3}
-          showsVerticalScrollIndicator={false}
-          renderItem={({item}) =>
-          <View  >
-         <TouchableOpacity onPress={() => this._openDetail(item)}>
-            <View style={styles.rowElement}>
-               <View style={styles.emptyWidth}></View>
-                <View style={styles.imageWidth}>
-                  <Image
-                  style={styles.image}
-                  source={{uri: item.url}}
-                />
-               </View>
-               </View>
-           <View style={styles.rowElement}>
-          <View style={styles.emptyWidth}></View>
-           <View style={styles.imageWidth}>
-           <Text style={styles.textalignment2}>{item.date} </Text>
-           </View>
-           </View>
-        
-          <View style={styles.rowElement}>
-          <View style={styles.emptyWidth}></View>
-           <View style={styles.imageWidth}>
-           <Text style={styles.textalignment}>{item.text}</Text>
-           </View>
-           </View>
-           </TouchableOpacity>
-           </View>
-          }
-          keyExtractor={item => item.id}
-        />
-           
-           
-          
-           
-
-           
-          
-           
-
- 
-               </View>
+        <View style={styles.container}>
+        <Text onPress={() => this._updateDefaultPlacementState()}>Tap to get default ad's state: { this.state.defaultPlacementState }</Text>
+        <Text onPress={() => this._showDefaultPlacementAd()} style={styles.text}>Tap here to start playing default ad.</Text>
+        </View>
     );
-  }
 }
-
-
+_updateDefaultPlacementState() {
+    UnityAds.getState(defaultPlacementState => {
+        this.setState({
+            defaultPlacementState: defaultPlacementState
+        });
+    });
+}
+_showDefaultPlacementAd() {
+    UnityAds.show();
+}
+}
 const styles = StyleSheet.create({
-  toolbar:{
-    backgroundColor:'#4834d4',
-    paddingTop:20,
-    paddingBottom:20,
-    flexDirection:'row'    //Step 1
-},
-textalignment:{
-  marginTop:5,
-  fontSize:12
-},
-textalignment2:{
-  marginTop:5,
-  fontSize:10,
-  color : '#95a5a6'
-},
-rowElement:{
-  width:'100%',
-  flexDirection : 'row',
-}, 
-emptyWidth : {
-  width : '10%'
-},
-imageWidth : {
-  width:80
-},
-
-image: {
-  marginTop:20,
-  width: 80, height: 70
-},
-toolbarButton:{
-    width: 50,            //Step 2
-    color:'#fff',
-    textAlign:'center'
-},
-toolbarTitle:{
-    color:'#fff',
-    textAlign:'center',
-    fontWeight:'bold',
-    flex:1, 
-    fontSize:20               //Step 3
-}, 
-  headerLeftIconStyle: {
-    marginLeft: 15,
-  },
-  searchInputContainer: {
+container: {
     flex: 1,
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: '#999',
-    flexDirection: 'row',
-    backgroundColor: 'white',
-  },
-  searchInputIconStyle: {
-    padding: 5,
-  },
-  searchInputStyle: {
-    flex: 1,
-    paddingRight: 10,
-    textAlign: 'left',
-  },
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+},
+text: {
+    fontSize: 24,
+    textAlign: 'center',
+    margin: 40,
+}
 });
+
+class Test extends Component {
+  componentWillReceiveProps(newProps){
+   
+    console.log("hiiiii")
+  }
+
+render() {
+  return ( 
+    <View>
+      <Text>{this.props.check}</Text>
+    </View>
+  
+  )
+}
+}

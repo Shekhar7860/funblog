@@ -32,3 +32,10 @@ allprojects {
         }
     }
 }
+// subprojects {
+// configurations.all {
+// resolutionStrategy {
+// force 'com.facebook.react:react-native:0.51.0'
+// }
+// }
+// }

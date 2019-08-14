@@ -42,14 +42,15 @@ export default class RankingScreen extends Component {
      {
        console.log(state.parms, 'params');
        
-       this.setState({details:state.params.data.text});
-    this.setState({image:state.params.data.url});
+       this.setState({details:state.params.data.description});
+    this.setState({image:state.params.data.image});
    
      }
      else{
        this.setState({user:" "});
      }
   }
+ 
   render() {
     return (
       <View style={{backgroundColor: '#eee', flex: 1, flexDirection: 'column'}}>
@@ -57,7 +58,7 @@ export default class RankingScreen extends Component {
                   <TouchableOpacity
                      style={styles.toolbarButton}
           onPress={() => {
-            this.props.navigation.goBack()
+            this.props.navigation.navigate("HomeScreen", {str : "dssaddd"})
           }}
         >
          <Image style={{width:30, marginLeft:5, height:30}} source={require('../images/back.png')}></Image>
@@ -68,7 +69,7 @@ export default class RankingScreen extends Component {
          
         >
           <Icon
-            name="back"
+            name="check-circle"
             size={20}
             color="#FFFFFF"
             style={styles.headerLeftIconStyle}
