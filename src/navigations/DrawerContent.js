@@ -1,21 +1,26 @@
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
-import { ScrollView, TouchableOpacity, Text, View } from 'react-native';
+import { ScrollView, TouchableOpacity, Text, View, Linking } from 'react-native';
 import Icon from 'react-native-vector-icons/Octicons';
+
 
 class DrawerContent extends Component {
   state = {
     channels: [
       { screen: 'HomeScreen', title: 'Home', icon: 'home' },
-      { screen: 'RankingScreen', title: 'Ranking', icon: 'list-ordered' },
+      { screen: 'RankingScreen', title: 'Open WebSite', icon: 'list-ordered' },
     ],
   };
 
   navigateToScreen = route => () => {
-    const navigate = NavigationActions.navigate({
-      routeName: route,
-    });
-    this.props.navigation.dispatch(navigate);
+if(route == "RankingScreen")
+{
+  Linking.openURL("https://www.funblog.in/").catch((err) => console.error('An error occurred', err));
+}
+else
+{
+  this.props.navigation.closeDrawer();  
+}
   };
 
   renderChannelButtons() {

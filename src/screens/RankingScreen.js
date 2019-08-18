@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image, ScrollView} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import firebase from 'react-native-firebase';
 const Banner = firebase.admob.Banner;
 const AdRequest = firebase.admob.AdRequest;
 const advert = firebase.admob().interstitial('ca-app-pub-3372831736678620/8944003029')
+const advert2 = firebase.admob().interstitial('ca-app-pub-3372831736678620/7494584748')
 const request = new AdRequest();
 request.addKeyword('foobar');
 export default class RankingScreen extends Component {
@@ -50,6 +51,21 @@ export default class RankingScreen extends Component {
        this.setState({user:" "});
      }
   }
+
+  back = () => {
+    advert2.loadAd(request.build());
+ 
+    advert2.on('onAdLoaded', () => {
+      console.log('Advert ready to show.');
+    });
+      if (advert2.isLoaded()) {
+        console.log('working')
+        advert2.show();
+      } else {
+        console.log('error occured')
+      }
+    this.props.navigation.navigate("HomeScreen", {str : "dssaddd"})
+  }
  
   render() {
     return (
@@ -58,7 +74,7 @@ export default class RankingScreen extends Component {
                   <TouchableOpacity
                      style={styles.toolbarButton}
           onPress={() => {
-            this.props.navigation.navigate("HomeScreen", {str : "dssaddd"})
+            this.back()
           }}
         >
          <Image style={{width:30, marginLeft:5, height:30}} source={require('../images/back.png')}></Image>
@@ -77,10 +93,21 @@ export default class RankingScreen extends Component {
         </TouchableOpacity>
                 </View>
                 <Image
-                  style={{width:200, height : 200, marginTop:10, alignSelf:'center'}}
+                  style={{width:300, height : 300, marginTop:10, alignSelf:'center'}}
                   source={{uri: this.state.image}}
                 />
-                <Text style={{marginTop:10, alignSelf : 'center'}}>{this.state.details}</Text>
+                <ScrollView>
+                <Text style={{margin:10, alignSelf : 'center'}}>{this.state.details}</Text>
+                <Banner
+       style={{alignSelf:'center',marginLeft:20}}
+    size={"LARGE_BANNER"}
+  unitId={"ca-app-pub-3372831736678620/9546033010"}
+  request={request.build()}
+  onAdLoaded={() => {
+    console.log('Advert loaded');
+  }} />
+                </ScrollView>
+                
       </View>
     );
   }
